@@ -1,9 +1,7 @@
 import database.DatabaseConnectionFactory;
 import model.Book;
 import model.builder.BookBuilder;
-import repository.BookRepository;
-import repository.BookRepositoryMock;
-import repository.BookRepositoryMySQL;
+import repository.*;
 import service.BookService;
 import service.BookServiceImpl;
 
@@ -36,21 +34,23 @@ public class Main {
 */
 
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
-        BookRepository bookRepository = new BookRepositoryMySQL(connection);
+        BookRepository bookRepository = new BookRepositoryCacheDecorator(new BookRepositoryMySQL(connection), new Cache<>());
         BookService bookService = new BookServiceImpl(bookRepository);
+
 
         bookService.save(book);
         System.out.println(bookService.findAll());
-        Book bookMoaraCuNoroc = new BookBuilder()
+        System.out.println(bookService.findAll());
+
+/*        Book bookMoaraCuNoroc = new BookBuilder()
                 .setTitle("Moara cu noroc")
                 .setAuthor("Ioan Slavici")
                 .setPublishedDate(LocalDate.of(1950, 2, 10))
                 .build();
         bookService.save(bookMoaraCuNoroc);
-        System.out.println(bookService.findAll());
         bookService.delete(bookMoaraCuNoroc);
         bookService.delete(book);
-        System.out.println(bookRepository.findAll());
+        System.out.println(bookRepository.findAll());*/
 
     }
 }
