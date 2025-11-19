@@ -14,26 +14,26 @@ import view.model.BookDTO;
 import java.sql.Connection;
 import java.util.List;
 
-public class ComponentFactory {
+public class ComponentFactoryBook {
 
     private final BookView bookView;
     private final BookController bookController;
     private final BookRepository bookRepository;
     private final BookService bookService;
-    private static volatile ComponentFactory instance;
+    private static volatile ComponentFactoryBook instance;
 
-    public static ComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage){
+    public static ComponentFactoryBook getInstance(Boolean componentsForTest, Stage primaryStage){
         if (instance == null){
-            synchronized (ComponentFactory.class) {
+            synchronized (ComponentFactoryBook.class) {
                 if (instance == null) {
-                    instance = new ComponentFactory(componentsForTest, primaryStage);
+                    instance = new ComponentFactoryBook(componentsForTest, primaryStage);
                 }
             }
         }
         return  instance;
     }
 
-    private ComponentFactory(Boolean componentsForTest, Stage primaryStage){
+    private ComponentFactoryBook(Boolean componentsForTest, Stage primaryStage){
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(componentsForTest).getConnection();
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImpl(bookRepository);

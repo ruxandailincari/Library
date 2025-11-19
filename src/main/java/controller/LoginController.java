@@ -2,13 +2,13 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import launcher.ComponentFactoryBook;
 import model.User;
 import model.validator.Notification;
-import model.validator.UserValidator;
 import service.user.AuthenticationService;
+import view.BookView;
 import view.LoginView;
 
-import java.util.List;
 
 public class LoginController {
     private final LoginView loginView;
@@ -35,6 +35,11 @@ public class LoginController {
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
             } else {
                 loginView.setActionTargetText("LogIn Successful!");
+
+                ComponentFactoryBook componentFactoryBook = ComponentFactoryBook.getInstance(false, loginView.getStage());
+                BookView bookView = componentFactoryBook.getBookView();
+
+                loginView.getStage().setScene(bookView.getScene());
             }
         }
     }

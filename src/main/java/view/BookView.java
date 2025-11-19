@@ -25,6 +25,7 @@ public class BookView {
     private Label titleLabel;
     private Button saveButton;
     private Button deleteButton;
+    private Scene scene;
 
 
     public BookView(Stage primaryStage, List<BookDTO> books){
@@ -33,7 +34,7 @@ public class BookView {
         GridPane gridPane = new GridPane();
         initializeGridPane(gridPane);
 
-        Scene scene = new Scene(gridPane, 720, 480);
+        this.scene = new Scene(gridPane, 720, 480);
         primaryStage.setScene(scene);
 
         booksObservableList = FXCollections.observableArrayList(books);
@@ -122,5 +123,9 @@ public class BookView {
 
     public TableView getBookTableView(){
         return bookTableView;
+    }
+
+    public Scene getScene(){
+        return scene;
     }
 }
