@@ -44,14 +44,19 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         UserValidator userValidator = new UserValidator(user);
 
         boolean userValid = userValidator.validate();
-
-
         if(!userValid){
             userValidator.getErrors().forEach(userRegisterNotification::addError);
             userRegisterNotification.setResult(Boolean.FALSE);
+            return userRegisterNotification;
         } else {
             user.setPassword(hashPassword(password));
-            userRegisterNotification.setResult(userRepository.save(user));
+            Notification<Boolean> saveResult = userRepository.save(user);
+            if(saveResult.hasErrors()){
+                saveResult.getErrors().forEach(userRegisterNotification::addError);
+                userRegisterNotification.setResult(Boolean.FALSE);
+            } else {
+                userRegisterNotification.setResult(Boolean.TRUE);
+            }
         }
 
         return userRegisterNotification;

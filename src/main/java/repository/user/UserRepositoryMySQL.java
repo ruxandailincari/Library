@@ -81,7 +81,8 @@ public class UserRepositoryMySQL implements UserRepository{
     }
 
     @Override
-    public boolean save(User user) {
+    public Notification<Boolean> save(User user) {
+        Notification<Boolean> saveNotification = new Notification<>();
         try {
             PreparedStatement insertUserStatement = connection
                     .prepareStatement("Insert INTO `" + USER + "` values (null, ?, ?);", Statement.RETURN_GENERATED_KEYS);
@@ -95,11 +96,13 @@ public class UserRepositoryMySQL implements UserRepository{
             user.setId(userId);
 
             rightsRolesRepository.addRolesToUser(user, user.getRoles());
-
-            return true;
+            saveNotification.setResult(Boolean.TRUE);
+            return saveNotification;
         } catch (SQLException e){
-            e.printStackTrace();
-            return false;
+            System.out.println(e.toString());
+            saveNotification.addError("Something is wrong with the Database!");
+            saveNotification.setResult(Boolean.FALSE);
+            return saveNotification;
         }
     }
 
