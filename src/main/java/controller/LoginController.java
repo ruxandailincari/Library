@@ -4,11 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.User;
 import model.validator.Notification;
-import model.validator.UserValidator;
 import service.user.AuthenticationService;
 import view.LoginView;
 
-import java.util.List;
 
 public class LoginController {
     private final LoginView loginView;
