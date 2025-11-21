@@ -20,6 +20,16 @@ public class BookDTOBuilder {
         return this;
     }
 
+    public BookDTOBuilder setPrice(Float price){
+        bookDTO.setPrice(price);
+        return this;
+    }
+
+    public BookDTOBuilder setStock(Integer stock){
+        bookDTO.setStock(stock);
+        return this;
+    }
+
     public BookDTO build(){
         return bookDTO;
     }
