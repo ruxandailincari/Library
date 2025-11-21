@@ -27,11 +27,18 @@ public class BookController {
         public void handle(ActionEvent event) {
             String title = bookView.getTitle();
             String author = bookView.getAuthor();
+            String price = bookView.getPrice();
+            String stock = bookView.getStock();
 
-            if(title.isEmpty() || author.isEmpty()){
+            if(title.isEmpty() || author.isEmpty() || price.isEmpty() || stock.isEmpty()){
                 bookView.addDisplayAlertMessage("Save Error", "Problem at Author or Title fields", "Can not have an empty Title or Author field.");
             } else {
-                BookDTO bookDTO = new BookDTOBuilder().setTitle(title).setAuthor(author).build();
+                BookDTO bookDTO = new BookDTOBuilder()
+                        .setTitle(title)
+                        .setAuthor(author)
+                        .setPrice(Float.parseFloat(price))
+                        .setStock(Integer.parseInt(stock))
+                        .build();
                 boolean savedBook = bookService.save(BookMapper.convertBookDTOToBook(bookDTO));
 
                 if(savedBook){

@@ -21,8 +21,12 @@ public class BookView {
     private final ObservableList<BookDTO> booksObservableList;
     private TextField authorTextField;
     private TextField titleTextField;
+    private TextField priceTextField;
+    private TextField stockTextField;
     private Label authorLabel;
     private Label titleLabel;
+    private Label priceLabel;
+    private Label stockLabel;
     private Button saveButton;
     private Button deleteButton;
     private Scene scene;
@@ -60,8 +64,12 @@ public class BookView {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         TableColumn<BookDTO, String> authorColumn = new TableColumn<BookDTO, String>("Author");
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        TableColumn<BookDTO, String> priceColumn = new TableColumn<>("Price");
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        TableColumn<BookDTO, String> stockColumn = new TableColumn<>("Stock");
+        stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
-        bookTableView.getColumns().addAll(titleColumn, authorColumn);
+        bookTableView.getColumns().addAll(titleColumn, authorColumn, priceColumn, stockColumn);
 
         bookTableView.setItems(booksObservableList);
 
@@ -80,6 +88,18 @@ public class BookView {
 
         authorTextField = new TextField();
         gridPane.add(authorTextField, 4, 1);
+
+        priceLabel = new Label("Price");
+        gridPane.add(priceLabel, 1, 2);
+
+        priceTextField = new TextField();
+        gridPane.add(priceTextField, 2,2);
+
+        stockLabel = new Label("Stock");
+        gridPane.add(stockLabel, 3, 2);
+
+        stockTextField = new TextField();
+        gridPane.add(stockTextField, 4, 2);
 
         saveButton = new Button("Save");
         gridPane.add(saveButton, 5, 1);
@@ -112,6 +132,10 @@ public class BookView {
     public String getAuthor(){
         return authorTextField.getText();
     }
+
+    public String getPrice(){ return priceTextField.getText();}
+
+    public String getStock(){ return stockTextField.getText();}
 
     public void addBookToObservableList(BookDTO bookDTO){
         this.booksObservableList.add(bookDTO);
