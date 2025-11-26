@@ -1,5 +1,6 @@
 package repository.user;
 
+import model.Role;
 import model.User;
 import model.builder.UserBuilder;
 import model.validator.Notification;
@@ -9,7 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static database.Constants.Roles.EMPLOYEE;
 import static database.Constants.Tables.USER;
+import static database.Constants.Tables.USER_ROLE;
 
 public class UserRepositoryMySQL implements UserRepository{
 
@@ -129,5 +132,57 @@ public class UserRepositoryMySQL implements UserRepository{
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public Notification<Boolean> deleteEmployee(String email) {
+        Notification<Boolean> deleteNotification = new Notification<>();
+
+        try{
+            Long user_id = getUserIdForUsername(email);
+            if(user_id == null) {
+                deleteNotification.addError("User with this email doesn't exist in the database!");
+                deleteNotification.setResult(Boolean.FALSE);
+                return deleteNotification;
+            }
+
+            Role role = rightsRolesRepository.findRoleByTitle(EMPLOYEE);
+            Long roleId = role.getId();
+            String deleteEmployeeRole = "Delete from `" + USER_ROLE + "` where user_id=? and role_id=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(deleteEmployeeRole);
+            preparedStatement.setLong(1, user_id);
+            preparedStatement.setLong(2, roleId);
+            preparedStatement.executeUpdate();
+
+            String remainingRoles = "Select * from `" + USER_ROLE + "` where user_id=?;";
+            PreparedStatement preparedStatement1 = connection.prepareStatement(remainingRoles);
+            preparedStatement1.setLong(1, user_id);
+            ResultSet resultSet = preparedStatement1.executeQuery();
+            if(!resultSet.next()){
+                String deleteEmployeeFromUser = "Delete from `" + USER + "` where username=?;";
+                PreparedStatement preparedStatement2 = connection.prepareStatement(deleteEmployeeFromUser);
+                preparedStatement2.setString(1, email);
+                preparedStatement2.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            deleteNotification.addError("Something is wrong with the database!");
+            deleteNotification.setResult(Boolean.FALSE);
+            return deleteNotification;
+        }
+
+        deleteNotification.setResult(Boolean.TRUE);
+        return deleteNotification;
+    }
+
+    private Long getUserIdForUsername(String email) throws SQLException{
+        String fetchUserSql = "Select * from `" + USER + "` where username=?;";
+        PreparedStatement preparedStatement = connection.prepareStatement(fetchUserSql);
+        preparedStatement.setString(1, email);
+        ResultSet userResultSet = preparedStatement.executeQuery();
+        if(userResultSet.next()){
+            return userResultSet.getLong("id");
+        }
+        return null;
     }
 }

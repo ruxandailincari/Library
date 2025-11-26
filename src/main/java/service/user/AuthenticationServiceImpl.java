@@ -11,8 +11,10 @@ import repository.user.UserRepository;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Collections;
+import java.util.List;
 
 import static database.Constants.Roles.CUSTOMER;
+import static database.Constants.Roles.EMPLOYEE;
 
 public class AuthenticationServiceImpl implements AuthenticationService{
     private final UserRepository userRepository;
@@ -24,7 +26,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     }
 
     @Override
-    public Notification<Boolean> register(String username, String password) {
+    public Notification<Boolean> registerCustomer(String username, String password) {
         Notification<Boolean> userRegisterNotification = new Notification<>();
         boolean usernameNotUnique = userRepository.existsByUsername(username);
         if(usernameNotUnique){
@@ -70,6 +72,52 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     @Override
     public boolean logout(User user) {
         return false;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public Notification<User> addEmployee(String username, String password) {
+        Notification<User> userRegisterNotification = new Notification<>();
+        boolean usernameNotUnique = userRepository.existsByUsername(username);
+        if(usernameNotUnique){
+            userRegisterNotification.addError("User with this email already exists in the database!");
+            return userRegisterNotification;
+        }
+
+        Role customerRole = rightsRolesRepository.findRoleByTitle(EMPLOYEE);
+
+        User user = new UserBuilder()
+                .setUsername(username)
+                .setPassword(password)
+                .setRoles(Collections.singletonList(customerRole))
+                .build();
+
+        UserValidator userValidator = new UserValidator(user);
+
+        boolean userValid = userValidator.validate();
+        if(!userValid){
+            userValidator.getErrors().forEach(userRegisterNotification::addError);
+            return userRegisterNotification;
+        } else {
+            user.setPassword(hashPassword(password));
+            Notification<Boolean> saveResult = userRepository.save(user);
+            if(saveResult.hasErrors()){
+                saveResult.getErrors().forEach(userRegisterNotification::addError);
+            } else {
+                userRegisterNotification.setResult(user);
+            }
+        }
+
+        return userRegisterNotification;
+    }
+
+    @Override
+    public Notification<Boolean> deleteEmployee(String username) {
+        return userRepository.deleteEmployee(username);
     }
 
     private String hashPassword(String password){
