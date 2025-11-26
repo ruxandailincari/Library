@@ -11,4 +11,5 @@ public interface UserRepository {
     Notification<Boolean> save(User user);
     void removeAll();
     boolean existsByUsername(String email);
+    Notification<Boolean> deleteEmployee(String email);
 }

@@ -1,12 +1,12 @@
 package view;
 
+import database.Constants;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -14,8 +14,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 
 public class LoginView {
 
@@ -25,6 +23,7 @@ public class LoginView {
     private Button logInButton;
     private Text actionTarget;
     private Stage stage;
+    private ChoiceBox<String> userChoiceBox;
 
     public LoginView(Stage primaryStage){
         this.stage = primaryStage;
@@ -51,9 +50,9 @@ public class LoginView {
     }
 
     private void initializeSceneTitle(GridPane gridPane){
-        Text sceneTitle = new Text("Welocme to our Book Store");
+        Text sceneTitle = new Text("Welcome to our Book Store");
         sceneTitle.setFont(Font.font("Tahome", FontWeight.NORMAL, 20));
-        gridPane.add(sceneTitle, 0, 0, 2, 1);
+        gridPane.add(sceneTitle, 0, 0, 3, 1);
     }
 
     private void initializeFields(GridPane gridPane){
@@ -61,25 +60,30 @@ public class LoginView {
         gridPane.add(userName, 0, 1);
 
         userTextField = new TextField();
-        gridPane.add(userTextField, 1,1);
+        gridPane.add(userTextField, 1,1,2, 1);
 
         Label password = new Label("Password:");
         gridPane.add(password, 0, 2);
 
         passwordField = new PasswordField();
-        gridPane.add(passwordField, 1, 2);
+        gridPane.add(passwordField, 1, 2,2, 1);
 
         signInButton = new Button("Sign In");
         HBox signInButtonHBox = new HBox(10);
         signInButtonHBox.setAlignment(Pos.BOTTOM_RIGHT);
         signInButtonHBox.getChildren().add(signInButton);
-        gridPane.add(signInButtonHBox, 1, 4);
+        gridPane.add(signInButtonHBox, 2, 4);
 
         logInButton = new Button("Log In");
         HBox logInButtonHBox = new HBox(10);
         logInButtonHBox.setAlignment(Pos.BOTTOM_LEFT);
         logInButtonHBox.getChildren().add(logInButton);
         gridPane.add(logInButtonHBox, 0, 4);
+
+        userChoiceBox = new ChoiceBox<>();
+        userChoiceBox.getItems().addAll(Constants.Roles.ADMINISTRATOR, Constants.Roles.EMPLOYEE, Constants.Roles.CUSTOMER);
+        userChoiceBox.setValue(Constants.Roles.CUSTOMER);
+        gridPane.add(userChoiceBox, 1, 4);
 
         actionTarget = new Text();
         actionTarget.setFill(Color.FIREBRICK);
@@ -108,5 +112,9 @@ public class LoginView {
 
     public Stage getStage(){
         return this.stage;
+    }
+
+    public String getUserChoice(){
+        return userChoiceBox.getValue();
     }
 }
