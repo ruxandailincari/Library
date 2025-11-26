@@ -3,6 +3,7 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import mapper.BookMapper;
+import model.validator.Notification;
 import service.book.BookService;
 import view.BookView;
 import view.model.BookDTO;
@@ -19,6 +20,7 @@ public class BookController {
 
         this.bookView.addSaveButtonListener(new SaveButtonListener());
         this.bookView.addDeleteButtonListener(new DeleteButtonListener());
+        this.bookView.addSellButtonListener(new SellButtonListener());
     }
 
     private class SaveButtonListener implements EventHandler<ActionEvent>{
@@ -70,6 +72,51 @@ public class BookController {
                 bookView.addDisplayAlertMessage("Delete Error", "Problem at deleting book", "You must select a book before pressing the delete button.");
             }
 
+        }
+    }
+
+    private class SellButtonListener implements EventHandler<ActionEvent>{
+
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            BookDTO bookDTO = (BookDTO) bookView.getBookTableView().getSelectionModel().getSelectedItem();
+            if(bookDTO != null){
+                bookView.initializeBookNumberStage();
+                bookView.addSellButton2Listener(new SellButton2Listener());
+
+            } else {
+                bookView.addDisplayAlertMessage("Sell error", "Problem at selling book", "You must select a book before pressing the sell button");
+            }
+        }
+    }
+
+    private class SellButton2Listener implements EventHandler<ActionEvent>{
+
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            BookDTO bookDTO = (BookDTO) bookView.getBookTableView().getSelectionModel().getSelectedItem();
+            Integer nbOfBooksToSell = Integer.valueOf(bookView.getNbOfBooksToSell());
+            if(bookDTO != null){
+               Notification<Boolean> sellSuccessful = bookService.sell(BookMapper.convertBookDTOToBook(bookDTO), nbOfBooksToSell);
+
+                if (!sellSuccessful.hasErrors()){
+                    bookView.addDisplayAlertMessage("Sell successful", "Book sold", "The book stock was successfully updated in the database");
+                    bookView.removeBookFromObservableList(bookDTO);
+                    if(bookDTO.getStock() - nbOfBooksToSell > 0) {
+                        bookView.addBookToObservableList(new BookDTOBuilder()
+                                .setAuthor(bookDTO.getAuthor())
+                                .setTitle(bookDTO.getTitle())
+                                .setStock(bookDTO.getStock() - nbOfBooksToSell)
+                                .setPrice(bookDTO.getPrice())
+                                .build());
+                    }
+                } else {
+                    bookView.addDisplayAlertMessage("Sell Error", "Problem at selling book", sellSuccessful.getFormattedErrors());
+                }
+
+            } else {
+                bookView.addDisplayAlertMessage("Sell error", "Problem at selling book", "You must select a book before pressing the sell button");
+            }
         }
     }
 

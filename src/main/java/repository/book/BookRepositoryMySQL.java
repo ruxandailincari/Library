@@ -2,6 +2,7 @@ package repository.book;
 
 import model.Book;
 import model.builder.BookBuilder;
+import model.validator.Notification;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -100,6 +101,36 @@ public class BookRepositoryMySQL implements BookRepository{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Notification<Boolean> sellBooks(Book book, Integer nbOfBooks) {
+        String sellSql = "UPDATE book SET stock=? where title=? and author=?;";
+        Notification<Boolean> sellNotification = new Notification<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sellSql);
+            if(book.getStock() < nbOfBooks){
+                sellNotification.addError("Number of books introduced exceeds the available stock!");
+                sellNotification.setResult(Boolean.FALSE);
+                return sellNotification;
+            }
+            preparedStatement.setInt(1, book.getStock() - nbOfBooks);
+            preparedStatement.setString(2, book.getTitle());
+            preparedStatement.setString(3, book.getAuthor());
+            preparedStatement.executeUpdate();
+
+            if(book.getStock() - nbOfBooks == 0){
+                delete(book);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            sellNotification.addError("There was a problem with the database!");
+            sellNotification.setResult(Boolean.FALSE);
+
+        }
+
+        sellNotification.setResult(Boolean.TRUE);
+        return sellNotification;
     }
 
     private Book getBookFromResultSet(ResultSet resultSet) throws SQLException{

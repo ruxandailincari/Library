@@ -1,6 +1,7 @@
 package service.book;
 
 import model.Book;
+import model.validator.Notification;
 import repository.book.BookRepository;
 
 import java.time.LocalDate;
@@ -39,5 +40,10 @@ public class BookServiceImpl implements BookService{
         Book book = this.findById(id);
         LocalDate now = LocalDate.now();
         return (int) ChronoUnit.YEARS.between(book.getPublishedDate(), now);
+    }
+
+    @Override
+    public Notification<Boolean> sell(Book book, Integer nbOfBooks) {
+        return bookRepository.sellBooks(book, nbOfBooks);
     }
 }
