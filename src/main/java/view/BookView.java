@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -29,8 +30,12 @@ public class BookView {
     private Label stockLabel;
     private Button saveButton;
     private Button deleteButton;
+    private Button sellButton;
     private Scene scene;
-
+    private Stage selectBookNumberStage;
+    private Scene selectBookNumberScene;
+    private TextField numberOfBooksTextField;
+    private Button sellButton2;
 
     public BookView(Stage primaryStage, List<BookDTO> books){
         primaryStage.setTitle("Library");
@@ -106,6 +111,9 @@ public class BookView {
 
         deleteButton = new Button("Delete");
         gridPane.add(deleteButton, 6, 1);
+
+        sellButton = new Button("Sell");
+        gridPane.add(sellButton, 7, 1);
     }
 
     public void addSaveButtonListener(EventHandler<ActionEvent> saveButtonListener){
@@ -116,6 +124,10 @@ public class BookView {
         deleteButton.setOnAction(deleteButtonListener);
     }
 
+    public void addSellButtonListener(EventHandler<ActionEvent> sellButtonListener){
+        sellButton.setOnAction(sellButtonListener);
+    }
+
     public void addDisplayAlertMessage(String title, String header, String content){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -123,6 +135,37 @@ public class BookView {
         alert.setContentText(content);
 
         alert.showAndWait();
+    }
+
+    public void initializeBookNumberStage(){
+        GridPane gridPane = new GridPane();
+        initializeGridPane(gridPane);
+
+        this.selectBookNumberStage = new Stage();
+        this.selectBookNumberScene = new Scene(gridPane, 300, 300);
+        selectBookNumberStage.setScene(selectBookNumberScene);
+
+        initializeStage2Fields(gridPane);
+
+        selectBookNumberStage.show();
+    }
+
+    public void initializeStage2Fields(GridPane gridPane){
+        Label label = new Label("Number of books to sell:");
+        gridPane.add(label, 0, 0);
+
+        this.numberOfBooksTextField = new TextField();
+        gridPane.add(numberOfBooksTextField, 0, 1);
+
+        this.sellButton2 = new Button("Sell");
+        HBox sellButton2HBox = new HBox(10);
+        sellButton2HBox.setAlignment(Pos.CENTER);
+        sellButton2HBox.getChildren().add(sellButton2);
+        gridPane.add(sellButton2HBox, 0, 2);
+    }
+
+    public void addSellButton2Listener(EventHandler<ActionEvent> sellButton2Listener){
+        this.sellButton2.setOnAction(sellButton2Listener);
     }
 
     public String getTitle(){
@@ -136,6 +179,8 @@ public class BookView {
     public String getPrice(){ return priceTextField.getText();}
 
     public String getStock(){ return stockTextField.getText();}
+
+    public String getNbOfBooksToSell(){return numberOfBooksTextField.getText();}
 
     public void addBookToObservableList(BookDTO bookDTO){
         this.booksObservableList.add(bookDTO);

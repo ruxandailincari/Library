@@ -1,6 +1,7 @@
 package repository.book;
 
 import model.Book;
+import model.validator.Notification;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,4 +53,11 @@ public class BookRepositoryCacheDecorator extends BookRepositoryDecorator{
         cache.invalidateCache();
         decoratedBookRepository.removeAll();
     }
+
+    @Override
+    public Notification<Boolean> sellBooks(Book book, Integer nbOfBooks) {
+        cache.invalidateCache();
+        return decoratedBookRepository.sellBooks(book, nbOfBooks);
+    }
+
 }

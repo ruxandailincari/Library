@@ -1,6 +1,7 @@
 package repository.book;
 
 import model.Book;
+import model.validator.Notification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,5 +39,24 @@ public class BookRepositoryMock implements BookRepository{
     @Override
     public void removeAll() {
         books.clear();
+    }
+
+    @Override
+    public Notification<Boolean> sellBooks(Book book, Integer nbOfBooks) {
+        Optional<Book> bookToSell = books.parallelStream().filter(it -> it.getTitle().equals(book.getTitle()) && it.getAuthor().equals(book.getAuthor())).findFirst();
+        Notification<Boolean> notification = new Notification<>();
+        if(bookToSell.isEmpty()){
+            notification.setResult(Boolean.FALSE);
+            return notification;
+        }
+
+        Book foundBook = bookToSell.get();
+        if(foundBook.getStock() < nbOfBooks){
+            notification.setResult(Boolean.FALSE);
+            return notification;
+        }
+        foundBook.setStock(foundBook.getStock() - nbOfBooks);
+        notification.setResult(Boolean.TRUE);
+        return notification;
     }
 }

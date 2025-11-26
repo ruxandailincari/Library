@@ -14,8 +14,7 @@ import view.LoginView;
 
 import java.util.List;
 
-import static database.Constants.Roles.ADMINISTRATOR;
-import static database.Constants.Roles.CUSTOMER;
+import static database.Constants.Roles.*;
 
 
 public class LoginController {
@@ -45,7 +44,7 @@ public class LoginController {
                 String userChoice = loginView.getUserChoice();
                 List<Role> userRoles = loginNotification.getResult().getRoles();
 
-                if(userChoice.equals(CUSTOMER) && userRoles.stream().anyMatch(x -> x.getRole().equals(CUSTOMER))) {
+                if(userChoice.equals(EMPLOYEE) && userRoles.stream().anyMatch(x -> x.getRole().equals(EMPLOYEE))) {
                     ComponentFactoryBook componentFactoryBook = ComponentFactoryBook.getInstance(false, loginView.getStage());
                     BookView bookView = componentFactoryBook.getBookView();
 

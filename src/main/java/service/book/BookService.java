@@ -1,6 +1,7 @@
 package service.book;
 
 import model.Book;
+import model.validator.Notification;
 
 import java.util.List;
 
@@ -10,4 +11,5 @@ public interface BookService {
     boolean save(Book book);
     boolean delete(Book book);
     int getAgeOfBook(Long id);
+    public Notification<Boolean> sell(Book book, Integer nbOfBooks);
 }
