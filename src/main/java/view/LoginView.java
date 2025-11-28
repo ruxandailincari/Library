@@ -1,6 +1,5 @@
 package view;
 
-import database.Constants;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -23,7 +22,6 @@ public class LoginView {
     private Button logInButton;
     private Text actionTarget;
     private Stage stage;
-    private ChoiceBox<String> userChoiceBox;
 
     public LoginView(Stage primaryStage){
         this.stage = primaryStage;
@@ -80,11 +78,6 @@ public class LoginView {
         logInButtonHBox.getChildren().add(logInButton);
         gridPane.add(logInButtonHBox, 0, 4);
 
-        userChoiceBox = new ChoiceBox<>();
-        userChoiceBox.getItems().addAll(Constants.Roles.ADMINISTRATOR, Constants.Roles.EMPLOYEE, Constants.Roles.CUSTOMER);
-        userChoiceBox.setValue(Constants.Roles.CUSTOMER);
-        gridPane.add(userChoiceBox, 1, 4);
-
         actionTarget = new Text();
         actionTarget.setFill(Color.FIREBRICK);
         gridPane.add(actionTarget, 1, 6);
@@ -112,9 +105,5 @@ public class LoginView {
 
     public Stage getStage(){
         return this.stage;
-    }
-
-    public String getUserChoice(){
-        return userChoiceBox.getValue();
     }
 }
