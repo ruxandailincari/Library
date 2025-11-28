@@ -1,6 +1,6 @@
 package launcher;
 
-import controller.BookController;
+import controller.EmployeeController;
 import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
 import mapper.BookMapper;
@@ -8,47 +8,47 @@ import repository.book.BookRepository;
 import repository.book.BookRepositoryMySQL;
 import service.book.BookService;
 import service.book.BookServiceImpl;
-import view.BookView;
+import view.EmployeeView;
 import view.model.BookDTO;
 
 import java.sql.Connection;
 import java.util.List;
 
-public class ComponentFactoryBook {
+public class ComponentFactoryEmployee {
 
-    private final BookView bookView;
-    private final BookController bookController;
+    private final EmployeeView employeeView;
+    private final EmployeeController employeeController;
     private final BookRepository bookRepository;
     private final BookService bookService;
-    private static volatile ComponentFactoryBook instance;
+    private static volatile ComponentFactoryEmployee instance;
 
-    public static ComponentFactoryBook getInstance(Boolean componentsForTest, Stage primaryStage){
+    public static ComponentFactoryEmployee getInstance(Boolean componentsForTest, Stage primaryStage){
         if (instance == null){
-            synchronized (ComponentFactoryBook.class) {
+            synchronized (ComponentFactoryEmployee.class) {
                 if (instance == null) {
-                    instance = new ComponentFactoryBook(componentsForTest, primaryStage);
+                    instance = new ComponentFactoryEmployee(componentsForTest, primaryStage);
                 }
             }
         }
         return  instance;
     }
 
-    private ComponentFactoryBook(Boolean componentsForTest, Stage primaryStage){
+    private ComponentFactoryEmployee(Boolean componentsForTest, Stage primaryStage){
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(componentsForTest).getConnection();
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImpl(bookRepository);
         List<BookDTO> bookDTOs = BookMapper.convertBookListToBookDTOList(bookService.findAll());
-        this.bookView = new BookView(primaryStage, bookDTOs);
-        this.bookController = new BookController(bookView, bookService);
+        this.employeeView = new EmployeeView(primaryStage, bookDTOs);
+        this.employeeController = new EmployeeController(employeeView, bookService);
 
     }
 
-    public BookView getBookView() {
-        return bookView;
+    public EmployeeView getBookView() {
+        return employeeView;
     }
 
-    public BookController getBookController() {
-        return bookController;
+    public EmployeeController getBookController() {
+        return employeeController;
     }
 
     public BookRepository getBookRepository() {

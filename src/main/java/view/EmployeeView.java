@@ -17,7 +17,7 @@ import view.model.BookDTO;
 
 import java.util.List;
 
-public class BookView {
+public class EmployeeView {
     private TableView bookTableView;
     private final ObservableList<BookDTO> booksObservableList;
     private TextField authorTextField;
@@ -37,7 +37,7 @@ public class BookView {
     private TextField numberOfBooksTextField;
     private Button sellButton2;
 
-    public BookView(Stage primaryStage, List<BookDTO> books){
+    public EmployeeView(Stage primaryStage, List<BookDTO> books){
         primaryStage.setTitle("Library");
 
         GridPane gridPane = new GridPane();
