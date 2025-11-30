@@ -3,6 +3,7 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import mapper.BookMapper;
+import model.User;
 import model.validator.Notification;
 import service.book.BookService;
 import view.EmployeeView;
@@ -13,10 +14,12 @@ public class EmployeeController {
 
     private final EmployeeView employeeView;
     private final BookService bookService;
+    private final User user;
 
-    public EmployeeController(EmployeeView employeeView, BookService bookService){
+    public EmployeeController(EmployeeView employeeView, BookService bookService, User user){
         this.employeeView = employeeView;
         this.bookService = bookService;
+        this.user = user;
 
         this.employeeView.addSaveButtonListener(new SaveButtonListener());
         this.employeeView.addDeleteButtonListener(new DeleteButtonListener());
