@@ -32,6 +32,8 @@ public class Bootstrap {
             Statement statement = connection.createStatement();
 
             String[] dropStatements = {
+                    "TRUNCATE `order`",
+                    "DROP TABLE `order`",
                     "TRUNCATE `role_right`;",
                     "DROP TABLE `role_right`;",
                     "TRUNCATE `right`;",
@@ -39,6 +41,8 @@ public class Bootstrap {
                     "TRUNCATE `user_role`;",
                     "DROP TABLE `user_role`;",
                     "TRUNCATE `role`;",
+                    "TRUNCATE book;",
+                    "TRUNCATE `user`;",
                     "DROP TABLE `book`, `role`, `user`;"
             };
 
