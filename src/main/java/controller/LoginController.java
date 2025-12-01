@@ -49,7 +49,7 @@ public class LoginController {
                    AdminView adminView = componentFactoryAdmin.getAdminView();
                    loginView.getStage().setScene(adminView.getScene());
                }  else if(userRoles.stream().anyMatch(x -> x.getRole().equals(EMPLOYEE))){
-                   ComponentFactoryEmployee componentFactoryEmployee = ComponentFactoryEmployee.getInstance(false, loginView.getStage());
+                   ComponentFactoryEmployee componentFactoryEmployee = ComponentFactoryEmployee.getInstance(false, loginView.getStage(), loginNotification.getResult());
                    EmployeeView employeeView = componentFactoryEmployee.getBookView();
                    loginView.getStage().setScene(employeeView.getScene());
                } else if (userRoles.stream().anyMatch(x -> x.getRole().equals(CUSTOMER))){

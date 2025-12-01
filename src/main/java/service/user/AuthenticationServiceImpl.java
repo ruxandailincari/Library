@@ -88,12 +88,12 @@ public class AuthenticationServiceImpl implements AuthenticationService{
             return userRegisterNotification;
         }
 
-        Role customerRole = rightsRolesRepository.findRoleByTitle(EMPLOYEE);
+        Role employeeRole = rightsRolesRepository.findRoleByTitle(EMPLOYEE);
 
         User user = new UserBuilder()
                 .setUsername(username)
                 .setPassword(password)
-                .setRoles(Collections.singletonList(customerRole))
+                .setRoles(Collections.singletonList(employeeRole))
                 .build();
 
         UserValidator userValidator = new UserValidator(user);

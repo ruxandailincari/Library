@@ -3,20 +3,30 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import mapper.BookMapper;
+import model.Order;
+import model.User;
+import model.builder.OrderBuilder;
 import model.validator.Notification;
 import service.book.BookService;
+import service.order.OrderService;
 import view.EmployeeView;
 import view.model.BookDTO;
 import view.model.builder.BookDTOBuilder;
+
+import java.time.LocalDateTime;
 
 public class EmployeeController {
 
     private final EmployeeView employeeView;
     private final BookService bookService;
+    private final User user;
+    private final OrderService orderService;
 
-    public EmployeeController(EmployeeView employeeView, BookService bookService){
+    public EmployeeController(EmployeeView employeeView, BookService bookService, OrderService orderService, User user){
         this.employeeView = employeeView;
         this.bookService = bookService;
+        this.orderService = orderService;
+        this.user = user;
 
         this.employeeView.addSaveButtonListener(new SaveButtonListener());
         this.employeeView.addDeleteButtonListener(new DeleteButtonListener());
@@ -110,6 +120,15 @@ public class EmployeeController {
                                 .setPrice(bookDTO.getPrice())
                                 .build());
                     }
+
+                    Order order = new OrderBuilder()
+                            .setEmployeeId(user.getId())
+                            .setBookNumber(nbOfBooksToSell)
+                            .setTotalCost(nbOfBooksToSell * bookDTO.getPrice())
+                            .setOrderDate(LocalDateTime.now())
+                            .build();
+                    orderService.add(order);
+
                 } else {
                     employeeView.addDisplayAlertMessage("Sell Error", "Problem at selling book", sellSuccessful.getFormattedErrors());
                 }
