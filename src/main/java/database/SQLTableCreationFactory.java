@@ -76,7 +76,7 @@ public class SQLTableCreationFactory {
                     " employee_id INT NOT NULL," +
                     " book_number INT NOT NULL," +
                     " total_cost FLOAT NOT NULL," +
-                    " orderDate datetime DEFAULT NULL," +
+                    " order_date datetime DEFAULT NULL," +
                     " PRIMARY KEY (id)," +
                     " UNIQUE KEY id_UNIQUE (id)," +
                     " INDEX employee_id_idx (employee_id ASC)," +
