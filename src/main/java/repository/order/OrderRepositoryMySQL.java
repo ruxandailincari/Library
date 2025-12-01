@@ -2,7 +2,6 @@ package repository.order;
 
 import model.Order;
 import model.builder.OrderBuilder;
-import model.validator.Notification;
 
 import java.sql.*;
 import java.util.ArrayList;

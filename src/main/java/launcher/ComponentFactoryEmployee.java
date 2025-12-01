@@ -7,8 +7,12 @@ import mapper.BookMapper;
 import model.User;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryMySQL;
+import repository.order.OrderRepository;
+import repository.order.OrderRepositoryMySQL;
 import service.book.BookService;
 import service.book.BookServiceImpl;
+import service.order.OrderService;
+import service.order.OrderServiceImpl;
 import view.EmployeeView;
 import view.model.BookDTO;
 
@@ -21,6 +25,8 @@ public class ComponentFactoryEmployee {
     private final EmployeeController employeeController;
     private final BookRepository bookRepository;
     private final BookService bookService;
+    private final OrderRepository orderRepository;
+    private final OrderService orderService;
     private static volatile ComponentFactoryEmployee instance;
 
     public static ComponentFactoryEmployee getInstance(Boolean componentsForTest, Stage primaryStage, User user){
@@ -39,8 +45,10 @@ public class ComponentFactoryEmployee {
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImpl(bookRepository);
         List<BookDTO> bookDTOs = BookMapper.convertBookListToBookDTOList(bookService.findAll());
+        this.orderRepository = new OrderRepositoryMySQL(connection);
+        this.orderService = new OrderServiceImpl(orderRepository);
         this.employeeView = new EmployeeView(primaryStage, bookDTOs);
-        this.employeeController = new EmployeeController(employeeView, bookService, user);
+        this.employeeController = new EmployeeController(employeeView, bookService, orderService, user);
 
     }
 
