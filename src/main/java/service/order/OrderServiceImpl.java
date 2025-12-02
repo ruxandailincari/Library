@@ -21,4 +21,9 @@ public class OrderServiceImpl implements OrderService{
     public boolean add(Order order) {
         return orderRepository.add(order);
     }
+
+    @Override
+    public Float calculateTotalCost(Float pricePerUnit, Integer bookNumber) {
+        return pricePerUnit * bookNumber;
+    }
 }
