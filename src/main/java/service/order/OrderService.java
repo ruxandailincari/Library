@@ -7,4 +7,5 @@ import java.util.List;
 public interface OrderService {
     List<Order> findAll();
     boolean add(Order order);
+    Float calculateTotalCost(Float pricePerUnit, Integer bookNumber);
 }

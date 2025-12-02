@@ -124,7 +124,7 @@ public class EmployeeController {
                     Order order = new OrderBuilder()
                             .setEmployeeId(user.getId())
                             .setBookNumber(nbOfBooksToSell)
-                            .setTotalCost(nbOfBooksToSell * bookDTO.getPrice())
+                            .setTotalCost(orderService.calculateTotalCost(bookDTO.getPrice(), nbOfBooksToSell))
                             .setOrderDate(LocalDateTime.now())
                             .build();
                     orderService.add(order);
