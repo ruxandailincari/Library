@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import mapper.UserMapper;
 import model.User;
 import model.validator.Notification;
+import service.ReportGeneratorService;
 import service.user.AuthenticationService;
 import view.AdminView;
 import view.model.UserDTO;
@@ -13,13 +14,16 @@ import view.model.UserDTO;
 public class AdminController {
     private final AdminView adminView;
     private final AuthenticationService authenticationService;
+    private final ReportGeneratorService reportGeneratorService;
 
-    public AdminController(AdminView adminView, AuthenticationService authenticationService){
+    public AdminController(AdminView adminView, AuthenticationService authenticationService, ReportGeneratorService reportGeneratorService){
         this.adminView = adminView;
         this.authenticationService = authenticationService;
+        this.reportGeneratorService = reportGeneratorService;
 
         this.adminView.addAddEmployeeButtonListener(new AddEmployeeButtonListener());
         this.adminView.addDeleteEmployeeButtonListener(new DeleteEmployeeButtonListener());
+        this.adminView.addGenerateReportButtonListener(new GenerateReportButtonListener());
     }
 
     private class AddEmployeeButtonListener implements EventHandler<ActionEvent>{
@@ -56,6 +60,14 @@ public class AdminController {
                 adminView.setActionTargetText("Employee deletion successful!");
                 adminView.deleteUserFromObservableList(userDTO);
             }
+        }
+    }
+
+    private class GenerateReportButtonListener implements EventHandler<ActionEvent>{
+
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            reportGeneratorService.createPdf();
         }
     }
 }

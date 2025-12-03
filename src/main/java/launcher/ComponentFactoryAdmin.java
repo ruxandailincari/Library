@@ -7,12 +7,17 @@ import mapper.BookMapper;
 import mapper.UserMapper;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryMySQL;
+import repository.order.OrderRepository;
+import repository.order.OrderRepositoryMySQL;
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
 import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
+import service.ReportGeneratorService;
 import service.book.BookService;
 import service.book.BookServiceImpl;
+import service.order.OrderService;
+import service.order.OrderServiceImpl;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImpl;
 import view.AdminView;
@@ -30,6 +35,9 @@ public class ComponentFactoryAdmin {
     private final UserRepository userRepository;
     private final RightsRolesRepository rightsRolesRepository;
     private final AuthenticationService authenticationService;
+    private final ReportGeneratorService reportGeneratorService;
+    private final OrderRepository orderRepository;
+    private final OrderService orderService;
     private static volatile ComponentFactoryAdmin instance;
 
     public static ComponentFactoryAdmin getInstance(Boolean componentsForTest, Stage stage){
@@ -54,7 +62,10 @@ public class ComponentFactoryAdmin {
         this.authenticationService = new AuthenticationServiceImpl(userRepository, rightsRolesRepository);
         List<UserDTO> userDTOS = UserMapper.convertUserListToUserDTOList(authenticationService.findAll());
         this.adminView = new AdminView(stage, bookDTOs, userDTOS);
-        this.adminController = new AdminController(adminView, authenticationService);
+        this.orderRepository = new OrderRepositoryMySQL(connection);
+        this.orderService = new OrderServiceImpl(orderRepository);
+        this.reportGeneratorService = new ReportGeneratorService(orderService);
+        this.adminController = new AdminController(adminView, authenticationService, reportGeneratorService);
 
     }
 

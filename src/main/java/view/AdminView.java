@@ -29,6 +29,7 @@ public class AdminView {
     private PasswordField passwordField;
     private Button addEmployeeButton;
     private Button deleteEmployeeButton;
+    private Button generateReportButton;
     private Text actionTarget;
 
 
@@ -110,6 +111,9 @@ public class AdminView {
         deleteEmployeeButton = new Button("Delete Employee");
         gridPane.add(deleteEmployeeButton, 5, 1);
 
+        generateReportButton = new Button("Generate report");
+        gridPane.add(generateReportButton, 6, 1);
+
         actionTarget = new Text();
         actionTarget.setFill(Color.FIREBRICK);
         gridPane.add(actionTarget, 2,2, 2,1);
@@ -125,6 +129,10 @@ public class AdminView {
 
     public void addDeleteEmployeeButtonListener(EventHandler<ActionEvent> deleteEmployeeButtonListener){
         deleteEmployeeButton.setOnAction(deleteEmployeeButtonListener);
+    }
+
+    public void addGenerateReportButtonListener(EventHandler<ActionEvent> generateReportButtonListener){
+        generateReportButton.setOnAction(generateReportButtonListener);
     }
 
     public String getUsername(){
