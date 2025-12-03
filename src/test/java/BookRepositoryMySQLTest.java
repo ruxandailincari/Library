@@ -36,19 +36,19 @@ public class BookRepositoryMySQLTest {
 
     @Test
     public void save(){
-        assertTrue(bookRepositoryMySQL.save(new BookBuilder().setTitle("Emma").setAuthor("Jane Austen").setPublishedDate(LocalDate.of(1808,1,1)).build()));
+        assertTrue(bookRepositoryMySQL.save(new BookBuilder().setTitle("Emma").setAuthor("Jane Austen").setPublishedDate(LocalDate.of(1808,1,1)).setStock(10).setPrice(12.0f).build()));
     }
 
     @Test
     public void delete(){
-        Book book = new BookBuilder().setTitle("Persuasion").setAuthor("Jane Austen").setPublishedDate(LocalDate.of(1808,1,1)).build();
+        Book book = new BookBuilder().setTitle("Persuasion").setAuthor("Jane Austen").setPublishedDate(LocalDate.of(1808,1,1)).setStock(19).setPrice(89.0f).build();
         bookRepositoryMySQL.save(book);
         assertTrue(bookRepositoryMySQL.delete(book));
     }
 
     @Test
     public void findById(){
-        Book book = new BookBuilder().setTitle("Pride and Prejudice").setAuthor("Jane Austen").setPublishedDate(LocalDate.of(1808,1,1)).build();
+        Book book = new BookBuilder().setTitle("Pride and Prejudice").setAuthor("Jane Austen").setPublishedDate(LocalDate.of(1808,1,1)).setStock(10).setPrice(99.0f).build();
         bookRepositoryMySQL.save(book);
         List<Book> books = bookRepositoryMySQL.findAll();
         final Optional<Book> foundBook = bookRepositoryMySQL.findById(books.getFirst().getId());
